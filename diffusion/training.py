@@ -10,12 +10,14 @@ import optax
 import equinox as eqx
 
 
+@eqx.filter_jit
 def add_noise_to_image(alphas, example, t, key):
     alpha_t = alphas[t]
     noise = jr.normal(key=key, shape=example.shape)
     return jnp.sqrt(alpha_t) * example + jnp.sqrt(1 - alpha_t) * noise, noise
 
 
+@eqx.filter_jit
 def single_example_loss(model, t_min, t_max, alphas, example, key):
     """
     Args:
@@ -32,6 +34,7 @@ def single_example_loss(model, t_min, t_max, alphas, example, key):
     return jnp.mean((noise - noise_prediction)**2)
 
 
+@eqx.filter_jit
 def batch_loss(model, t_min, t_max, alphas, batch, key):
     keys = jr.split(key, batch.shape[0])
     loss_fn = functools.partial(single_example_loss, model, t_min, t_max,
@@ -61,7 +64,6 @@ def train_model(model,
                 num_steps,
                 log_frequency=50):
     optimizer = optax.adam(learning_rate)
-    # Optax will update the floating-point JAX arrays in the model.
     optimizer_state = optimizer.init(eqx.filter(model, eqx.is_inexact_array))
     for i, batch in zip(range(num_steps), dataloader):
         loss, model, key, optimizer_state = model_training_step(

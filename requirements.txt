@@ -1,0 +1,6 @@
+jax
+optax
+equinox
+jaxlib
+matplotlib
+numpy
