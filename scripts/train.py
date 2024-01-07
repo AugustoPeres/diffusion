@@ -65,7 +65,7 @@ def make_samples(model, key, num_samples, shape, betas, alphas, alpha_tildas,
                                          storing_frequency=storing_frequency)
         for j, image in enumerate(sampled_images):
             save_dir_image = os.path.join(save_path, f'samples_{i}')
-            save_image_path = os.path.join(save_dir_image, f'image_{j}.png')
+            save_image_path = os.path.join(save_dir_image, f'image_{j:05}.png')
             if not os.path.exists(save_dir_image):
                 os.mkdir(save_dir_image)
             visualization.plot_image(image, save_image_path)
