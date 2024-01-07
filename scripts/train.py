@@ -5,6 +5,7 @@ from absl import app
 from absl import flags
 
 import jax.random as jr
+import equinox as eqx
 
 from diffusion.models import UNet
 import diffusion.training as training
