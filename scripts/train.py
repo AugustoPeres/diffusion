@@ -1,4 +1,5 @@
 import os
+import json
 
 from absl import app
 from absl import flags
@@ -70,8 +71,53 @@ def make_samples(model, key, num_samples, shape, betas, alphas, alpha_tildas,
             visualization.plot_image(image, save_image_path)
 
 
+def save_flags_to_json(flags_dict, file_path):
+    """
+    Save flags from a dictionary to a JSON file.
+
+    Parameters:
+    - flags_dict (dict): Dictionary containing the flags to be saved.
+    - file_path (str): Path to the JSON file where the flags will be saved.
+    """
+    try:
+        directory = os.path.dirname(file_path)
+
+        # Create the directory if it doesn't exist
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        with open(file_path, 'w') as json_file:
+            json.dump(flags_dict, json_file, indent=4)
+        print(f'Flags saved successfully to {file_path}')
+    except Exception as e:
+        print(f'Error saving flags to {file_path}: {e}')
+
+
 def main(_):
     key = jr.PRNGKey(FLAGS.random_key)
+
+    save_flags_to_json(
+        {
+            'data_shape': FLAGS.data_shape,
+            'is_biggan': FLAGS.is_biggan,
+            'dim_mults': FLAGS.dim_mults,
+            'hidden_size': FLAGS.hidden_size,
+            'heads': FLAGS.heads,
+            'dim_head': FLAGS.dim_head,
+            'dropout_rate': FLAGS.dropout_rate,
+            'num_res_blocks': FLAGS.num_res_blocks,
+            'attn_resolutions': FLAGS.attn_resolutions,
+            'learning_rate': FLAGS.learning_rate,
+            'batch_size': FLAGS.batch_size,
+            'num_diffusion_steps': FLAGS.num_diffusion_steps,
+            'min_beta': FLAGS.min_beta,
+            'max_beta': FLAGS.max_beta,
+            'num_training_iterations': FLAGS.num_training_iterations,
+            'logging_frequency': FLAGS.logging_frequency,
+            'num_samples': FLAGS.num_samples,
+            'storing_frequency': FLAGS.storing_frequency,
+            'random_key': FLAGS.random_key,
+        }, os.path.join(FLAGS.output_dir, 'flags.json'))
+
     model_key, training_key, sampling_key = jr.split(key, 3)
 
     dataloader = data.load_images_from_directory(
@@ -98,6 +144,9 @@ def main(_):
                                  FLAGS.learning_rate,
                                  FLAGS.num_training_iterations,
                                  FLAGS.logging_frequency)
+
+    eqx.tree_serialise_leaves(os.path.join(FLAGS.output_dir, 'model.eqx'),
+                              model)
 
     make_samples(model, sampling_key, FLAGS.num_samples,
                  tuple(map(int, FLAGS.data_shape)), betas, alphas,

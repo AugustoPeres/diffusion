@@ -4,3 +4,4 @@ equinox
 jaxlib
 matplotlib
 numpy
+einops
