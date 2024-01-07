@@ -21,7 +21,7 @@ def sample(model,
         x -= ((1 - alphas[t]) /
               (jnp.sqrt(1 - alpha_tildas[t]))) * predicted_noise
         x /= jnp.sqrt(alphas[t])
-        z = jr.uniform(key=noise_key, shape=shape) if t > 0 else 0
+        z = jr.normal(key=noise_key, shape=shape) if t > 0 else 0
         x += jnp.sqrt(betas[t]) * z
         if t % storing_frequency == 0:
             images.append(x)
