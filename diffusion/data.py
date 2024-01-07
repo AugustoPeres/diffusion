@@ -34,7 +34,8 @@ def load_images_from_directory(directory,
         for file in batch_files:
             image_path = os.path.join(directory, file)
             image = Image.open(image_path)
-            image = jnp.array(image).reshape(target_shape) * 2 / 255.0 - 1
+            image = jnp.array(
+                image, dtype='uint16').reshape(target_shape) * 2 / 255.0 - 1
             images.append(image)
 
         yield jnp.array(images)
