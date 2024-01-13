@@ -124,7 +124,8 @@ def main(_):
                                  alpha_tildas, dataloader, training_key,
                                  FLAGS.learning_rate,
                                  FLAGS.num_training_iterations,
-                                 FLAGS.logging_frequency)
+                                 FLAGS.logging_frequency, FLAGS.output_dir,
+                                 300)
 
     eqx.tree_serialise_leaves(os.path.join(FLAGS.output_dir, 'model.eqx'),
                               model)

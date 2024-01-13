@@ -1,4 +1,5 @@
 """Model training functions"""
+import os
 import functools
 
 import jax
@@ -62,7 +63,9 @@ def train_model(model,
                 key,
                 learning_rate,
                 num_steps,
-                log_frequency=50):
+                log_frequency=50,
+                output_dir=None,
+                model_logging_frequency=100):
     optimizer = optax.adam(learning_rate)
     optimizer_state = optimizer.init(eqx.filter(model, eqx.is_inexact_array))
     for i, batch in zip(range(num_steps), dataloader):
@@ -72,4 +75,11 @@ def train_model(model,
 
         if i % log_frequency == 0:
             print(f'loss at step {i} = {loss}')
+
+        if output_dir is not None:
+            if i % model_logging_frequency == 0:
+                eqx.tree_serialise_leaves(
+                    os.path.join(output_dir, f'model_step_{i}.eqx'), model)
+                print(f'saving model at step {i} with loss {loss}')
+
     return model
