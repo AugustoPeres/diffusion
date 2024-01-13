@@ -39,6 +39,8 @@ flags.DEFINE_float('max_beta', 0.02, 'The maximum value of beta.')
 flags.DEFINE_integer('num_training_iterations', 1000,
                      'The number of training iterations.')
 flags.DEFINE_integer('logging_frequency', 50, 'After how many steps to log.')
+flags.DEFINE_boolean('black_and_white', False,
+                     'If the images to load are in black and white.')
 
 flags.DEFINE_integer('num_samples', 5,
                      'Number of images to sample after training.')
@@ -93,13 +95,15 @@ def main(_):
             'num_samples': FLAGS.num_samples,
             'storing_frequency': FLAGS.storing_frequency,
             'random_key': FLAGS.random_key,
+            'black_and_white': FLAGS.black_and_white,
         }, os.path.join(FLAGS.output_dir, 'flags.json'))
 
     model_key, training_key, sampling_key = jr.split(key, 3)
 
     dataloader = data.load_images_from_directory(
-        FLAGS.path_to_data, FLAGS.batch_size, tuple(map(int,
-                                                        FLAGS.data_shape)))
+        FLAGS.path_to_data,
+        FLAGS.batch_size,
+        black_and_white=FLAGS.black_and_white)
 
     model = UNet(data_shape=tuple(map(int, FLAGS.data_shape)),
                  is_biggan=FLAGS.is_biggan,
@@ -128,7 +132,8 @@ def main(_):
     utils.make_samples(model, sampling_key, FLAGS.num_samples,
                        tuple(map(int, FLAGS.data_shape)), betas, alphas,
                        alpha_tildas, FLAGS.num_diffusion_steps,
-                       FLAGS.storing_frequency, FLAGS.output_dir)
+                       FLAGS.storing_frequency, FLAGS.output_dir,
+                       FLAGS.black_and_white)
 
 
 if __name__ == '__main__':

@@ -52,7 +52,7 @@ def main(_):
         hidden_size=flags['hidden_size'],
         heads=flags['heads'],
         dim_head=flags['dim_head'],
-        dropout_rate=flags['dropout_rate'],
+        dropout_rate=0,  # Use zero dropout since we are in inference.
         num_res_blocks=flags['num_res_blocks'],
         attn_resolutions=flags['attn_resolutions'],
         key=model_key,

@@ -7,7 +7,7 @@ import diffusion.sampling as sampling
 
 
 def make_samples(model, key, num_samples, shape, betas, alphas, alpha_tildas,
-                 time_steps, storing_frequency, save_path):
+                 time_steps, storing_frequency, save_path, black_and_white):
     if not os.path.exists(save_path):
         os.mkdir(save_path)
 
@@ -27,4 +27,6 @@ def make_samples(model, key, num_samples, shape, betas, alphas, alpha_tildas,
             save_image_path = os.path.join(save_dir_image, f'image_{j:05}.png')
             if not os.path.exists(save_dir_image):
                 os.mkdir(save_dir_image)
-            visualization.plot_image(image, shape, save_image_path)
+            visualization.plot_image(image,
+                                     save_image_path,
+                                     black_and_white=black_and_white)
