@@ -76,7 +76,7 @@ def main(_):
 
     save_flags_to_json(
         {
-            'data_shape': FLAGS.data_shape,
+            'data_shape': list(map(int, FLAGS.data_shape)),
             'is_biggan': FLAGS.is_biggan,
             'dim_mults': FLAGS.dim_mults,
             'hidden_size': FLAGS.hidden_size,
