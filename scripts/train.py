@@ -32,6 +32,8 @@ flags.DEFINE_list('attn_resolutions', [4, 4],
 
 flags.DEFINE_float('learning_rate', 1e-4, 'The learning rate of the model.')
 flags.DEFINE_integer('batch_size', 16, 'The batch size for training.')
+flags.DEFINE_integer('accumulate_batches', 1,
+                     'Number of batches to accumulate.')
 flags.DEFINE_integer('num_diffusion_steps', 1000,
                      'The number of diffusion steps.')
 flags.DEFINE_float('min_beta', 10e-4, 'The minimum value of beta.')
@@ -87,6 +89,7 @@ def main(_):
             'attn_resolutions': FLAGS.attn_resolutions,
             'learning_rate': FLAGS.learning_rate,
             'batch_size': FLAGS.batch_size,
+            'accumulate_batches': FLAGS.accumulate_batches,
             'num_diffusion_steps': FLAGS.num_diffusion_steps,
             'min_beta': FLAGS.min_beta,
             'max_beta': FLAGS.max_beta,
@@ -120,12 +123,11 @@ def main(_):
                                               FLAGS.num_diffusion_steps)
     alphas, alpha_tildas = diffusion_utils.make_alpha_tildas(betas)
 
-    model = training.train_model(model, 0, FLAGS.num_diffusion_steps,
-                                 alpha_tildas, dataloader, training_key,
-                                 FLAGS.learning_rate,
-                                 FLAGS.num_training_iterations,
-                                 FLAGS.logging_frequency, FLAGS.output_dir,
-                                 300)
+    model = training.train_model(
+        model, 0, FLAGS.num_diffusion_steps, alpha_tildas, dataloader,
+        training_key, FLAGS.learning_rate, FLAGS.num_training_iterations,
+        FLAGS.accumulate_batches, FLAGS.logging_frequency, FLAGS.output_dir,
+        300)
 
     eqx.tree_serialise_leaves(os.path.join(FLAGS.output_dir, 'model.eqx'),
                               model)

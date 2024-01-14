@@ -63,11 +63,16 @@ def train_model(model,
                 key,
                 learning_rate,
                 num_steps,
+                accumulate_batches,
                 log_frequency=50,
                 output_dir=None,
                 model_logging_frequency=100):
     optimizer = optax.adam(learning_rate)
+    if accumulate_batches > 1:
+        optimizer = optax.MultiSteps(optimizer,
+                                     every_k_schedule=accumulate_batches)
     optimizer_state = optimizer.init(eqx.filter(model, eqx.is_inexact_array))
+
     for i, batch in zip(range(num_steps), dataloader):
         loss, model, key, optimizer_state = model_training_step(
             model, t_min, t_max, alphas, batch, key, optimizer_state,

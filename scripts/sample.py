@@ -62,7 +62,8 @@ def main(_):
 
     utils.make_samples(model, sampling_key, FLAGS.num_samples, data_shape,
                        betas, alphas, alpha_tildas, num_diffusion_steps,
-                       FLAGS.storing_frequency, FLAGS.output_dir)
+                       FLAGS.storing_frequency, FLAGS.output_dir,
+                       flags['black_and_white'])
 
 
 if __name__ == '__main__':
