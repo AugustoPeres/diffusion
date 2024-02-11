@@ -1,6 +1,6 @@
 # Diffusion in jax
 
-| Column 1 | Column 2 | Column 3 |
+|          |          |          |
 |---|---|---|
 | ![GIF](readme_images/sample_0.gif) | ![GIF](readme_images/sample_1.gif) | ![GIF](readme_images/sample_2.gif) |
 | ![GIF](readme_images/sample_3.gif) | ![GIF](readme_images/sample_4.gif) | ![GIF](readme_images/sample_5.gif) |
