@@ -7,4 +7,3 @@
 | ![GIF](readme_images/sample_9.gif) | ![GIF](readme_images/sample_10.gif) | ![GIF](readme_images/sample_11.gif) |
 | ![GIF](readme_images/sample_12.gif) | ![GIF](readme_images/sample_13.gif) | ![GIF](readme_images/sample_14.gif) |
 | ![GIF](readme_images/sample_15.gif) | ![GIF](readme_images/sample_16.gif) | ![GIF](readme_images/sample_17.gif) |
-| ![GIF](readme_images/sample_18.gif) | ![GIF](readme_images/sample_19.gif) |
